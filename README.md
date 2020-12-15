@@ -1,2 +1,2 @@
-# OOP_2020
-Assignments given in OOP course in java at Ariel University. 
+# OOP 2020 Ariel University
+This repo with contain the OOP course's assignments.
