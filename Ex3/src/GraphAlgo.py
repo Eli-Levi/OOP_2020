@@ -58,38 +58,40 @@ class GraphAlgo(GraphAlgoInterface):
                 pq = PriorityQueue()
                 cost = dict()
                 path = dict()
-                n = self.get_graph().dictionary.get(id1)
                 cost[id1] = 0
                 w = -1.0
-                pq.put(cost[id1], id1)
+                pq.put((cost[id1], id1))
                 while not pq.empty():
                     n = pq.get()
-                    for i in self.get_graph().all_out_edges_of_node(n):
-                        ni = i
-                        if not ni in cost:
-                            cost[ni] = cost.get(n.getKey) + self.get_graph().all_out_edges_of_node(n).get(ni)
-                            pq.put(cost[ni], ni)
-                            path[ni] = n
-                        elif cost[ni] > cost.get(n.getKey) + self.get_graph().all_out_edges_of_node(n).get(ni):
-                            cost[ni] = cost.get(n.getKey) + self.get_graph().all_out_edges_of_node(n).get(ni)
-                            pq.put(cost[ni], ni)
-                            path[ni] = n
-                        if ni == id2:
-                            if w == -1.0:
-                                w = cost[ni]
-                            else:
-                                w = min(w, cost[ni])
+
+                    if self.get_graph().all_out_edges_of_node(n[1]) is not None:
+                        for i in self.get_graph().all_out_edges_of_node(n[1]):
+                            ni = i
+                            if not ni in cost:
+                                cost[ni] = cost.get(n[1]) + self.get_graph().all_out_edges_of_node(n[1]).get(ni)
+                                pq.put((cost[ni], ni))
+                                path[ni] = n[1]
+                            elif cost[ni] > cost.get(n[1]) + self.get_graph().all_out_edges_of_node(n[1]).get(ni):
+                                cost[ni] = cost.get(n[1]) + self.get_graph().all_out_edges_of_node(n[1]).get(ni)
+                                pq.put((cost[ni], ni))
+                                path[ni] = n[1]
+                            if ni == id2:
+                                if w == -1.0:
+                                    w = cost[ni]
+                                else:
+                                    w = min(w, cost[ni])
                 if w == -1.0:
                     return -1, []
                 else:
                     revpathlist = []
                     x = id2
-                    while x == id1:
-                        revpathlist.__add__(path[x])
-                        x = path[x]
-                    revpathlist.__add__(id1)
+                    revpathlist.append(x)
+                    while not x == id1:
+                        revpathlist.append(path.get(x))
+                        x = path.get(x)
+                    revpathlist.reverse()
 
-                    return w, revpathlist.reverse()
+                    return w, revpathlist
 
     def connected_component(self, id1: int) -> list:
         pass
@@ -105,21 +107,19 @@ class GraphAlgo(GraphAlgoInterface):
             return False
 
         nodeslist = []
-        for i in self.get_graph().get_all_v():
-            # TODO
-            key = i
-            pos = self.get_graph().get_node(key).get_location()
+        for key, node in self.get_graph().get_all_v():
+            pos = node.get_position()
 
-            if pos.get_x() is not None:
-                pos_str = str(pos.get_x()) + ',' + str(pos.get_y()) + "," + str(pos.get_z())
+            if pos is not None:
+                pos_str = str(pos[0]) + ',' + str(pos[1]) + "," + str(pos[2])
                 nodeslist.append({"pos": pos_str, "id": key})
 
             nodeslist.append({"id": key})
 
         edgeslist = []
-        for i in self.get_graph().get_all_v():
-            for j in self.get_graph().get_neighbors(i):
-                edgeslist.append({"src": j.get_src(), "dest": j.get_dest(), "w": j.get_weight()})
+        for key, node in self.get_graph().get_all_v():
+            for dest, w in self.get_graph().all_out_edges_of_node(key).items():
+                edgeslist.append({"src": key, "dest": dest, "w": w})
 
         graph_data = {"Edges": edgeslist, "Nodes": nodeslist}
 
