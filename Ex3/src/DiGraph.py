@@ -21,8 +21,9 @@ class DiGraph(GraphInterface):
         return n.get_incoming_edges()
 
     def all_out_edges_of_node(self, id1: int):
-        n = self.dictionary[id1]
-        return n.get_outgoing_edges()
+        if id1 in self.dictionary:
+            n = self.dictionary[id1]
+            return n.get_outgoing_edges()
 
     def get_mc(self) -> int:
         return self.mc
@@ -101,4 +102,6 @@ class Node:
     def get_position(self):
         return self.position
 
-#TODO remove node for Node?
+
+
+# TODO remove node for Node?
