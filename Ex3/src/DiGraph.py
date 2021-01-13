@@ -80,6 +80,11 @@ class DiGraph(GraphInterface):
             return True
         return False
 
+    # def __eq__(self, other):
+
+    def __str__(self):
+        return "Graph has: " + str(self.get_all_v().values()) + " nodes and " + str(self.e_size()) + " edges\n"
+
 
 class Node:
     def __init__(self, position: tuple):
@@ -93,6 +98,7 @@ class Node:
     def get_outgoing_edges(self):
         return self.outgoing_edges
 
+    # TODo if this method needed?
     def set_incoming_edges(self, node_id: int, weight: float):
         if node_id not in self.incoming_edges.keys():
             self.incoming_edges[node_id] = weight
@@ -102,6 +108,12 @@ class Node:
     def get_position(self):
         return self.position
 
-
+    def __str__(self):
+        return "node incoming edges are: " \
+               + str(self.incoming_edges()) \
+               + " , node outgoing edges are: " \
+               + str(self.outgoing_edges) \
+               + " and node position is: " \
+               + str(self.get_position())
 
 # TODO remove node for Node?
