@@ -21,8 +21,9 @@ def check():
 
     """
     # check0()
-    check1()
+    #check1()
     # check2()
+    check3()
 
 
 def check0():
@@ -84,6 +85,12 @@ def check2():
     print(g_algo.connected_components())
     g_algo.plot_graph()
 
+def check3():
+    g_algo = GraphAlgo()  # init an empty graph - for the GraphAlgo
+    file = "../data/T0.json"
+    g_algo.load_from_json(file)
+    print(g_algo.connected_components())
 
 if __name__ == '__main__':
     check()
+

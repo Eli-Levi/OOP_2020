@@ -1,5 +1,7 @@
 import json
 from typing import List
+import matplotlib.pyplot as plt
+
 
 from GraphAlgoInterface import GraphAlgoInterface
 from DiGraph import DiGraph, Node
@@ -94,10 +96,28 @@ class GraphAlgo(GraphAlgoInterface):
                     return w, revpathlist
 
     def connected_component(self, id1: int) -> list:
-        pass
+        cheacklist = set()
+        rcheacklist = set()
+        self.dfs(cheacklist, id1)
+        self.rdfs(rcheacklist, id1)
+
+        scc = []
+        for i in cheacklist:
+            if i in rcheacklist:
+                scc.append(i)
+        return scc
 
     def connected_components(self) -> List[list]:
-        pass
+        scclist = []
+        cheack = set()
+        for key, v in self.get_graph().get_all_v():
+            if key not in cheack:
+                cuclist = self.connected_component(key)
+                for i in cuclist:
+                    cheack.add(i)
+                scclist.append(cuclist)
+
+        return scclist
 
     def plot_graph(self) -> None:
         pass
@@ -126,3 +146,17 @@ class GraphAlgo(GraphAlgoInterface):
         with open(file_name, 'w') as json_file:
             json.dump(graph_data, json_file)
         return True
+
+    def dfs(self, cheacklist, node):
+        if node not in cheacklist:
+            cheacklist.add(node)
+            if self.get_graph().all_out_edges_of_node(node) is not None:
+                for neighbour in self.get_graph().all_out_edges_of_node(node):
+                    self.dfs(cheacklist, neighbour)
+
+    def rdfs(self, cheacklist, node):
+        if node not in cheacklist:
+            cheacklist.add(node)
+            if self.get_graph().all_in_edges_of_node(node) is not None:
+                for neighbour in self.get_graph().all_in_edges_of_node(node):
+                    self.rdfs(cheacklist, neighbour)
