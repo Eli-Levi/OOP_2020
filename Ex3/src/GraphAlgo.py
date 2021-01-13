@@ -1,7 +1,7 @@
 import json
 from typing import List
 import matplotlib.pyplot as plt
-
+# TODO use it to draw
 
 from GraphAlgoInterface import GraphAlgoInterface
 from DiGraph import DiGraph, Node
@@ -46,11 +46,12 @@ class GraphAlgo(GraphAlgoInterface):
         except FileExistsError:
             return False
 
+        self.__init__(self.__graph)
         return True
 
     def shortest_path(self, id1: int, id2: int) -> (float, list):
-        if self.get_graph().v_size() < 2:
-            return -1, []
+        if self.__graph.v_size() < 2:
+            return float("inf"), []
         if self.get_graph().v_size() == 2:
             if id2 in self.get_graph().all_out_edges_of_node(id1):
                 return self.get_graph().all_out_edges_of_node(id1)[id2], [id1, id2]
@@ -83,7 +84,7 @@ class GraphAlgo(GraphAlgoInterface):
                                 else:
                                     w = min(w, cost[ni])
                 if w == -1.0:
-                    return -1, []
+                    return -1, [] #TODO change -1 to float("inf")?
                 else:
                     revpathlist = []
                     x = id2
@@ -94,8 +95,14 @@ class GraphAlgo(GraphAlgoInterface):
                     revpathlist.reverse()
 
                     return w, revpathlist
+            else:
+                return float("inf"),[]
+
+    # TODO add  Notes: If there is no path between id1 and id2, or one of them dose not exist the function returns (float('inf'),[])
 
     def connected_component(self, id1: int) -> list:
+        if self.get_graph() is None or id1 not in self.get_graph().get_all_v():
+            return []
         cheacklist = set()
         rcheacklist = set()
         self.dfs(cheacklist, id1)
@@ -108,6 +115,8 @@ class GraphAlgo(GraphAlgoInterface):
         return scc
 
     def connected_components(self) -> List[list]:
+        if self.get_graph() is None:
+            return []
         scclist = []
         cheack = set()
         for key, v in self.get_graph().get_all_v():
