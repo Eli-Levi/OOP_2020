@@ -113,6 +113,14 @@ class MyTestCase(unittest.TestCase):
         graph.remove_edge(1, 2)
         self.assertEqual(0, graph.e_size())
 
+    def test_remove_non_existing_edge(self):
+        graph = DiGraph()
+        graph.add_node(1, (1, 1))
+        graph.add_node(2, (2, 2))
+        result = graph.remove_edge(1, 2)
+        self.assertFalse(result)
+        self.assertEqual(0, graph.e_size())
+
 
 if __name__ == '__main__':
     unittest.main()
