@@ -1,6 +1,6 @@
 import json
 from typing import List
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 # TODO use it to draw
 
 from GraphAlgoInterface import GraphAlgoInterface
@@ -62,7 +62,7 @@ class GraphAlgo(GraphAlgoInterface):
                 cost = dict()
                 path = dict()
                 cost[id1] = 0
-                w = -1.0
+                w = float("inf")
                 pq.put((cost[id1], id1))
                 while not pq.empty():
                     n = pq.get()
@@ -79,12 +79,9 @@ class GraphAlgo(GraphAlgoInterface):
                                 pq.put((cost[ni], ni))
                                 path[ni] = n[1]
                             if ni == id2:
-                                if w == -1.0:
-                                    w = cost[ni]
-                                else:
-                                    w = min(w, cost[ni])
-                if w == -1.0:
-                    return -1, [] #TODO change -1 to float("inf")?
+                                w = min(w, cost[ni])
+                if w == float("inf"):
+                    return w, []
                 else:
                     revpathlist = []
                     x = id2
@@ -96,17 +93,30 @@ class GraphAlgo(GraphAlgoInterface):
 
                     return w, revpathlist
             else:
-                return float("inf"),[]
-
-    # TODO add  Notes: If there is no path between id1 and id2, or one of them dose not exist the function returns (float('inf'),[])
+                return float("inf"), []
 
     def connected_component(self, id1: int) -> list:
-        if self.get_graph() is None or id1 not in self.get_graph().get_all_v():
+        if self.get_graph() is None:
+            return []
+        if id1 not in self.get_graph().dictionary:
             return []
         cheacklist = set()
         rcheacklist = set()
-        self.dfs(cheacklist, id1)
-        self.rdfs(rcheacklist, id1)
+        oder = [id1]
+        for node in oder:
+            if node not in cheacklist:
+                cheacklist.add(node)
+                if self.get_graph().all_out_edges_of_node(node) is not None:
+                    for neighbour in self.get_graph().all_out_edges_of_node(node):
+                        oder.append(neighbour)
+        oder.clear()
+        oder.append(id1)
+        for node in oder:
+            if node not in rcheacklist:
+                rcheacklist.add(node)
+                if self.get_graph().all_in_edges_of_node(node) is not None:
+                    for neighbour in self.get_graph().all_in_edges_of_node(node):
+                        oder.append(neighbour)
 
         scc = []
         for i in cheacklist:
@@ -155,17 +165,3 @@ class GraphAlgo(GraphAlgoInterface):
         with open(file_name, 'w') as json_file:
             json.dump(graph_data, json_file)
         return True
-
-    def dfs(self, cheacklist, node):
-        if node not in cheacklist:
-            cheacklist.add(node)
-            if self.get_graph().all_out_edges_of_node(node) is not None:
-                for neighbour in self.get_graph().all_out_edges_of_node(node):
-                    self.dfs(cheacklist, neighbour)
-
-    def rdfs(self, cheacklist, node):
-        if node not in cheacklist:
-            cheacklist.add(node)
-            if self.get_graph().all_in_edges_of_node(node) is not None:
-                for neighbour in self.get_graph().all_in_edges_of_node(node):
-                    self.rdfs(cheacklist, neighbour)
