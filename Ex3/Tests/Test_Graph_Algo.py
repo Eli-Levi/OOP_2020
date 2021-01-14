@@ -1,4 +1,5 @@
 import json
+import random
 import unittest
 from json.decoder import JSONDecodeError
 import networkx as nx
@@ -124,7 +125,7 @@ class MyTestCase(unittest.TestCase):
         expected_graph.add_edge(1, 3, 1.8)
         expected_graph.add_edge(2, 3, 1.1)
         algo = GraphAlgo()
-        did_it_work = algo.load_from_json("C:/Users/eliap/IdeaProjects/OOP_2020/Ex3/data/G_10_80_1.json")
+        did_it_work = algo.load_from_json("C:/Users/eliap/IdeaProjects/OOP_2020/Ex3/data/T0.json")
         actual_graph = algo.get_graph()
         self.assertTrue(did_it_work)
         self.assertTrue(expected_graph.__eq__(actual_graph))
@@ -253,6 +254,46 @@ class MyTestCase(unittest.TestCase):
         actual_scc = algo.connected_components()
         self.assertEqual(expected_scc, actual_scc)
 
+    # def no_test(self):
+    #     tester = GraphAlgo()
+    #     tester.load_from_json("C:/Users/eliap/IdeaProjects/OOP_2020/Ex3/data/G_10_80_1.json")
+    #     graph = tester.get_graph()
+    #     tester.plot_graph(graph)
+
+    def load_from_json_nx(self, file_name: str):
+        try:
+            graph = nx.DiGraph()
+            file = open(file_name)
+            graph_of_file = json.load(file)
+
+            edgeslist = graph_of_file.get('Edges')
+            nodeslist = graph_of_file.get('Nodes')
+            for i in nodeslist:
+                key = i.get('id')
+
+                if i.get('pos') is not None:
+                    pos = list()
+                    for i in i.get('pos').split(','):
+                        i = float(i)
+                        pos.append(i)
+                    pos = tuple(pos)
+                    graph.add_node(key, pos=pos)
+                else:
+                    graph.add_node(key)
+
+            for i in edgeslist:
+                src = i.get('src')
+                dest = i.get('dest')
+                w = i.get('w')
+
+                graph.add_edge(src, dest, weight=w)
+
+            file.close()
+
+        except FileExistsError:
+            return False
+
+        return graph
 
 
 if __name__ == '__main__':

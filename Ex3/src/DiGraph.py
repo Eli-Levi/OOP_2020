@@ -2,10 +2,11 @@ from GraphInterface import GraphInterface
 
 
 class DiGraph(GraphInterface):
+
     def __init__(self):
         self.mc = 0
         self.num_of_edges = 0
-        self.dictionary = dict()
+        self.dictionary = {}
 
     def v_size(self):
         return len(self.dictionary)
@@ -99,8 +100,8 @@ class DiGraph(GraphInterface):
 class Node:
     def __init__(self, key: int, position: tuple):
         self.key = key
-        self.incoming_edges = dict()
-        self.outgoing_edges = dict()
+        self.incoming_edges = {}
+        self.outgoing_edges = {}
         self.position = position
 
     def get_incoming_edges(self):
@@ -109,7 +110,6 @@ class Node:
     def get_outgoing_edges(self):
         return self.outgoing_edges
 
-    # TODo if this method needed?
     def set_incoming_edges(self, node_id: int, weight: float):
         if node_id not in self.incoming_edges.keys():
             self.incoming_edges[node_id] = weight
@@ -118,6 +118,9 @@ class Node:
 
     def get_position(self):
         return self.position
+
+    def set_position(self, pos):
+        self.position = pos
 
     def get_key(self):
         return self.key
@@ -140,5 +143,3 @@ class Node:
                + str(self.outgoing_edges) \
                + " and node position is: " \
                + str(self.get_position())'''
-
-# TODO remove node for Node?
