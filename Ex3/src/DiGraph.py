@@ -80,7 +80,17 @@ class DiGraph(GraphInterface):
             return True
         return False
 
-    # def __eq__(self, other):
+    def __eq__(self, other):
+        if self.__class__ != other.__class__:
+            return False
+        if self.e_size() != other.e_size():
+            return False
+        if self.v_size() != other.v_size():
+            return False
+        for key in self.dictionary:
+            if self.dictionary.get(key) != other.dictionary.get(key):
+                return False
+        return True
 
     def __str__(self):
         return "Graph has: " + str(self.get_all_v().values()) + " nodes and " + str(self.e_size()) + " edges\n"
@@ -107,6 +117,17 @@ class Node:
 
     def get_position(self):
         return self.position
+
+    def __eq__(self, other):
+        if self.position != other.position:
+            return False
+        for key in self.incoming_edges:
+            if self.incoming_edges.get(key) != other.incoming_edges.get(key):
+                return False
+        for key in self.outgoing_edges:
+            if self.outgoing_edges.get(key) != other.outgoing_edges.get(key):
+                return False
+        return True
 
     def __str__(self):
         return "node incoming edges are: " \

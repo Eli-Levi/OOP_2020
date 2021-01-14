@@ -1,4 +1,6 @@
 import unittest
+from json.decoder import JSONDecodeError
+
 from DiGraph import DiGraph
 from GraphAlgo import GraphAlgo
 
@@ -72,8 +74,6 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(expected_size, result[0])
         self.assertEqual(expected_array, result[1])
 
-
-
     def test_load_from_json(self):
         expected_graph = DiGraph()
         expected_graph.add_node(0)
@@ -89,12 +89,16 @@ class MyTestCase(unittest.TestCase):
         did_it_work = algo.load_from_json("C:/Users/eliap/IdeaProjects/OOP_2020/Ex3/data/T0.json")
         actual_graph = algo.get_graph()
         self.assertTrue(did_it_work)
-        self.assertEqual(expected_graph, actual_graph.__str__())
-        self.assertEqual(expected_graph.get_mc(), actual_graph.get_mc().__str__())
+        self.assertTrue(expected_graph.__eq__(actual_graph))
 
-    def test_load_from_json_empty_file(self):
+    def test_load_from_json_file_not_exist(self):
         algo = GraphAlgo()
         self.assertRaises(FileNotFoundError, algo.load_from_json, "")
+
+    def test_load_from_json_emtpy_file(self):
+        algo = GraphAlgo()
+        self.assertRaises(JSONDecodeError or ResourceWarning, algo.load_from_json,
+                          "C:/Users/eliap/IdeaProjects/OOP_2020/Ex3/data/New.json")
 
     def test_save_to_json(self):
         graph = DiGraph()
@@ -118,12 +122,99 @@ class MyTestCase(unittest.TestCase):
         self.assertFalse(did_it_work)
 
     def test_connected_component(self):
-        # TODO write the test
-        pass
+        graph = DiGraph()
+        algo = GraphAlgo()
+        algo.__init__(graph)
+        graph.add_node(0)
+        graph.add_node(1)
+        graph.add_node(2)
+        graph.add_node(3)
+        graph.add_node(4)
+        graph.add_node(5)
+        graph.add_edge(0, 1, 1)
+        graph.add_edge(1, 2, 1.3)
+        graph.add_edge(2, 1, 2.4)
+        graph.add_edge(3, 1, 1.8)
+        graph.add_edge(4, 1, 3)
+        graph.add_edge(1, 4, 0.8)
+        graph.add_edge(1, 5, 3.5)
+        graph.add_edge(5, 1, 0.9)
+        expected_scc = [1,2,4,5]
+        actual_scc = algo.connected_component(1)
+        self.assertEqual(expected_scc,actual_scc)
+
+
+    def test_connected_component_non_existing_node(self):
+        graph = DiGraph()
+        algo = GraphAlgo()
+        algo.__init__(graph)
+        graph.add_node(0)
+        graph.add_node(1)
+        graph.add_node(2)
+        graph.add_node(3)
+        graph.add_node(4)
+        graph.add_node(5)
+        graph.add_edge(0, 1, 1)
+        graph.add_edge(1, 2, 1.3)
+        graph.add_edge(2, 1, 2.4)
+        graph.add_edge(3, 1, 1.8)
+        graph.add_edge(4, 1, 3)
+        graph.add_edge(1, 4, 0.8)
+        graph.add_edge(1, 5, 3.5)
+        graph.add_edge(5, 1, 0.9)
+        expected_scc = []
+        actual_scc = algo.connected_component(10)
+        self.assertEqual(expected_scc,actual_scc)
+
+    def test_connected_component_non_existing_graph(self):
+        algo = GraphAlgo()
+        expected_scc = []
+        actual_scc = algo.connected_component(0)
+        self.assertEqual(expected_scc,actual_scc)
+
+    def test_connected_component_single_node_scc(self):
+        graph = DiGraph()
+        algo = GraphAlgo()
+        algo.__init__(graph)
+        graph.add_node(0)
+        graph.add_node(1)
+        graph.add_node(2)
+        graph.add_node(3)
+        graph.add_node(4)
+        graph.add_node(5)
+        graph.add_edge(1, 2, 1.3)
+        graph.add_edge(2, 1, 2.4)
+        graph.add_edge(3, 1, 1.8)
+        graph.add_edge(4, 1, 3)
+        graph.add_edge(1, 4, 0.8)
+        graph.add_edge(1, 5, 3.5)
+        graph.add_edge(5, 1, 0.9)
+        expected_scc = [0]
+        actual_scc = algo.connected_component(0)
+        self.assertEqual(expected_scc, actual_scc)
 
     def test_connected_components(self):
-        # TODO write the test
-        pass
+        graph = DiGraph()
+        algo = GraphAlgo()
+        algo.__init__(graph)
+        graph.add_node(0)
+        graph.add_node(1)
+        graph.add_node(2)
+        graph.add_node(3)
+        graph.add_edge(0, 1, 1)
+        graph.add_edge(1, 0, 1.1)
+        graph.add_edge(1, 2, 1.3)
+        graph.add_edge(1, 3, 1.8)
+        graph.add_edge(2, 3, 1.1)
+        expected_scc = [[0,1],[2],[3]]
+        actual_scc = algo.connected_components()
+        self.assertEqual(expected_scc, actual_scc)
+
+    def test_connected_components_non_existing_graph(self):
+        algo = GraphAlgo()
+        expected_scc = []
+        actual_scc = algo.connected_components()
+        self.assertEqual(expected_scc, actual_scc)
 
 
 if __name__ == '__main__':
