@@ -1,7 +1,7 @@
 import json
 from typing import List
-# import matplotlib.pyplot as plt
-# TODO use it to draw
+import matplotlib.pyplot as plt
+import networkx as nx
 
 from GraphAlgoInterface import GraphAlgoInterface
 from DiGraph import DiGraph, Node
@@ -30,7 +30,7 @@ class GraphAlgo(GraphAlgoInterface):
                 if i.get('pos') is not None:
                     pos = str(i.get('pos'))
                     n = Node(key, pos)
-                    self.__graph.add_node(n)
+                    self.__graph.add_node(n.get_key(), n.get_position())
                 else:
                     self.__graph.add_node(key)
 
@@ -138,8 +138,44 @@ class GraphAlgo(GraphAlgoInterface):
 
         return scclist
 
-    def plot_graph(self) -> None:
-        pass
+    #TODO modify the function
+    # def plot_graph(self) -> None:
+    #     if self.get_graph() is None:
+    #         return
+    #
+    #     x_values = []
+    #     y_values = []
+    #
+    #     for i in self.get_graph().get_all_v():
+    #         node = self.get_graph().get_node(i)
+    #
+    #         if node.get_location().get_x() is None or node.get_location().get_y() is None:
+    #             node.set_location(GeoLocation(random.uniform(0, 100), random.uniform(0, 100)))
+    #
+    #         position = [node.get_location().get_x(), node.get_location().get_y()]
+    #
+    #         x_values.append(position[0])
+    #         y_values.append(position[1])
+    #         plt.text(position[0], position[1], node.get_key(), color='green')
+    #
+    #     plt.plot(x_values, y_values, '.', color='red')
+    #
+    #     for i in self.get_graph().get_all_v():
+    #         node = self.get_graph().get_node(i)
+    #         src_position = [node.get_location().get_x(), node.get_location().get_y()]
+    #
+    #         for j in self.get_graph().get_neighbors(i):
+    #             dest = self.get_graph().get_node(j.get_dest())
+    #             dest_position = [dest.get_location().get_x(), dest.get_location().get_y()]
+    #
+    #             delta_x = float(dest_position[0]) - float(src_position[0])
+    #             delta_y = float(dest_position[1]) - float(src_position[1])
+    #             distance = (delta_x ** 2 + delta_y ** 2) ** 0.5
+    #
+    #             plt.arrow(src_position[0], src_position[1], delta_x, delta_y, width=0.01 * distance, color='black')
+    #
+    #     plt.title(self.get_graph())
+    #     plt.show()
 
     def save_to_json(self, file_name: str) -> bool:
         if self.__graph is None:
@@ -165,3 +201,38 @@ class GraphAlgo(GraphAlgoInterface):
         with open(file_name, 'w') as json_file:
             json.dump(graph_data, json_file)
         return True
+
+    def load_from_json_nx(self, file_name: str):
+        try:
+            graph = nx.DiGraph()
+            file = open(file_name)
+            graph_of_file = json.load(file)
+
+            edgeslist = graph_of_file.get('Edges')
+            nodeslist = graph_of_file.get('Nodes')
+            for i in nodeslist:
+                key = i.get('id')
+
+                if i.get('pos') is not None:
+                    pos = list()
+                    for i in i.get('pos').split(','):
+                        i = float(i)
+                        pos.append(i)
+                    pos = tuple(pos)
+                    graph.add_node(key, pos=pos)
+                else:
+                    graph.add_node(key)
+
+            for i in edgeslist:
+                src = i.get('src')
+                dest = i.get('dest')
+                w = i.get('w')
+
+                graph.add_edge(src, dest, weight=w)
+
+            file.close()
+
+        except FileExistsError:
+            return False
+
+        return graph
