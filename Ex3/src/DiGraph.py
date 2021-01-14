@@ -49,7 +49,7 @@ class DiGraph(GraphInterface):
             return False
         graph = self.dictionary
         if node_id not in graph:
-            node = Node(pos)
+            node = Node(node_id, pos)
             graph[node_id] = node
             self.mc += 1
             return True
@@ -97,7 +97,8 @@ class DiGraph(GraphInterface):
 
 
 class Node:
-    def __init__(self, position: tuple):
+    def __init__(self, key: int, position: tuple):
+        self.key = key
         self.incoming_edges = dict()
         self.outgoing_edges = dict()
         self.position = position
@@ -118,6 +119,9 @@ class Node:
     def get_position(self):
         return self.position
 
+    def get_key(self):
+        return self.key
+
     def __eq__(self, other):
         if self.position != other.position:
             return False
@@ -129,12 +133,12 @@ class Node:
                 return False
         return True
 
-    def __str__(self):
+    '''def __str__(self):
         return "node incoming edges are: " \
                + str(self.incoming_edges()) \
                + " , node outgoing edges are: " \
                + str(self.outgoing_edges) \
                + " and node position is: " \
-               + str(self.get_position())
+               + str(self.get_position())'''
 
 # TODO remove node for Node?
