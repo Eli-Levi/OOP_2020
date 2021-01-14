@@ -24,7 +24,7 @@ def check():
     # check0()
     # check1()
     # check2()
-    check4()
+    checknx()
 
 
 def check0():
@@ -102,6 +102,14 @@ def check4():
     print(tester.shortest_path(0, 10))
     print("--- %s seconds ---" % (time.time_ns() - start_time))
 
+
+def checknx():
+    tester = GraphAlgo()
+    fileName = "../data/G_10_80_1.json"
+    tester.load_from_json_nx(fileName)
+    start_time = time.time_ns()
+    print(tester.get_graph())
+    print("--- %s seconds ---" % (time.time_ns() - start_time))
 
 if __name__ == '__main__':
     check()
