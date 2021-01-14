@@ -1,8 +1,8 @@
 import json
+import random
 from typing import List
 #import matplotlib.pyplot as plt
 import networkx as nx
-
 from GraphAlgoInterface import GraphAlgoInterface
 from DiGraph import DiGraph, Node
 from queue import PriorityQueue
@@ -138,44 +138,8 @@ class GraphAlgo(GraphAlgoInterface):
 
         return scclist
 
-    #TODO modify the function
-    # def plot_graph(self) -> None:
-    #     if self.get_graph() is None:
-    #         return
-    #
-    #     x_values = []
-    #     y_values = []
-    #
-    #     for i in self.get_graph().get_all_v():
-    #         node = self.get_graph().get_node(i)
-    #
-    #         if node.get_location().get_x() is None or node.get_location().get_y() is None:
-    #             node.set_location(GeoLocation(random.uniform(0, 100), random.uniform(0, 100)))
-    #
-    #         position = [node.get_location().get_x(), node.get_location().get_y()]
-    #
-    #         x_values.append(position[0])
-    #         y_values.append(position[1])
-    #         plt.text(position[0], position[1], node.get_key(), color='green')
-    #
-    #     plt.plot(x_values, y_values, '.', color='red')
-    #
-    #     for i in self.get_graph().get_all_v():
-    #         node = self.get_graph().get_node(i)
-    #         src_position = [node.get_location().get_x(), node.get_location().get_y()]
-    #
-    #         for j in self.get_graph().get_neighbors(i):
-    #             dest = self.get_graph().get_node(j.get_dest())
-    #             dest_position = [dest.get_location().get_x(), dest.get_location().get_y()]
-    #
-    #             delta_x = float(dest_position[0]) - float(src_position[0])
-    #             delta_y = float(dest_position[1]) - float(src_position[1])
-    #             distance = (delta_x ** 2 + delta_y ** 2) ** 0.5
-    #
-    #             plt.arrow(src_position[0], src_position[1], delta_x, delta_y, width=0.01 * distance, color='black')
-    #
-    #     plt.title(self.get_graph())
-    #     plt.show()
+    def plot_graph(self, g) -> None:
+       pass
 
     def save_to_json(self, file_name: str) -> bool:
         if self.__graph is None:
