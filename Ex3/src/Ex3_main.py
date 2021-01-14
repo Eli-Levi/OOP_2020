@@ -22,6 +22,9 @@ def check():
 
     """
     check0()
+    check1()
+    check2()
+    # check3()
 
 
 def check0():
