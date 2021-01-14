@@ -28,7 +28,6 @@ git clone https://github.com/Eli-Levi/OOP_2020/edit/main/Ex3.git
 
 You're all done!
 
-Now just pick a game level between 0 - 23 and see them go!
 
 
 
