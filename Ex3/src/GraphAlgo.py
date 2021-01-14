@@ -1,6 +1,6 @@
 import json
 from typing import List
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import networkx as nx
 
 from GraphAlgoInterface import GraphAlgoInterface

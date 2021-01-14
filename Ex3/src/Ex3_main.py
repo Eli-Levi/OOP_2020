@@ -1,5 +1,6 @@
 from DiGraph import DiGraph
 from GraphAlgo import GraphAlgo
+import time
 
 
 def check():
@@ -21,9 +22,9 @@ def check():
 
     """
     # check0()
-    #check1()
+    # check1()
     # check2()
-    check3()
+    check4()
 
 
 def check0():
@@ -85,12 +86,22 @@ def check2():
     print(g_algo.connected_components())
     g_algo.plot_graph()
 
+
 def check3():
     g_algo = GraphAlgo()  # init an empty graph - for the GraphAlgo
     file = "../data/T0.json"
     g_algo.load_from_json(file)
     print(g_algo.connected_components())
 
+
+def check4():
+    tester = GraphAlgo()
+    fileName = "../data/G_10_80_1.json"
+    tester.load_from_json(fileName)
+    start_time = time.time_ns()
+    print(tester.shortest_path(0, 10))
+    print("--- %s seconds ---" % (time.time_ns() - start_time))
+
+
 if __name__ == '__main__':
     check()
-
